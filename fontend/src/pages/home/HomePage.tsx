@@ -2,7 +2,8 @@ import TopBar from '@/components/TopBar'
 import { useMusicStore } from '@/stores/useMusicStore'
 import React, { useEffect } from 'react'
 import FeaturedSection from './components/FeaturedSection';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import SectionGrid from './components/SectionGrid';
 
 const HomePage = () => {
 
@@ -15,20 +16,20 @@ const HomePage = () => {
   }, [fetchFeaturedSongs,fetchMadeForYouSongs,fetchTrendingSongs])
   console.log({isLoading, madeForYouSongs, featuredSongs,trendingSongs})
   return (
-    <div className='rounded-md overflow-hidden'>
+    <main className='rounded-md overflow-hidden h-full bg-linear-to-b from-zinc-800 to-zinc-900'>
       <TopBar/>
-      <ScrollArea className='h-[calc(100vh - 180px)]'>
-        <div className='p-4 sm:p-6'>
-          <h1 className='text-xl sm:text-3xl font-bold mb-6'>Good Afternoon</h1>
-          <FeaturedSection />
-        </div>
+      <ScrollArea className='h-[calc(100vh-180px)] w-full'>
+          <div className='p-4 sm:p-6'>
+            <h1 className='text-xl sm:text-3xl font-bold mb-6'>Good Afternoon</h1>
+            <FeaturedSection />
+          </div>
 
-        <div className='space-y-8'>
-          <p>Mode for you</p>
-          <p>Trending</p>
-        </div>
+          <div className='p-4 sm:p-6 space-y-8'>
+            <SectionGrid title="Made For You" songs={madeForYouSongs} isLoading={isLoading}/>
+            <SectionGrid title="Trending" songs={trendingSongs} isLoading={isLoading}/>
+          </div>
       </ScrollArea>
-    </div>
+    </main>
   )
 }
 
