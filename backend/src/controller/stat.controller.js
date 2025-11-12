@@ -1,14 +1,12 @@
-export const getStats = async (req, res) => {
+import { Album } from "../models/album.model.js";
+import { Song } from "../models/song.model.js";
+import { User } from "../models/user.model.js";
+export const getStats = async (req, res, next) => {
     try {
-        // const totalSongs = await Song.countDocuments();
-        // const totalUsers = await User.countDocuments();
-        // const totalAlbums = await Album.countDocuments();
-
-        const [totalSongs, totalAlbums, totalUsers] = await Promise.all([
+        const [totalSongs, totalAlbums, totalUsers, uniqueArtists] = await Promise.all([
             Song.countDocuments(),
             Album.countDocuments(),
             User.countDocuments(),
-
             Song.aggregate([
                 {
                     $unionWith: {
@@ -22,16 +20,17 @@ export const getStats = async (req, res) => {
                     }
                 },
                 {
-                    $count: "count",
+                    $count: "count"
                 }
             ])
         ]);
+
         res.status(200).json({
             totalAlbums,
             totalSongs,
             totalUsers,
-            totalArists: uniqueArtist[0]?.count || 0
-        })
+            totalArtists: uniqueArtists[0]?.count || 0
+        });
     } catch (error) {
         next(error);
     }
