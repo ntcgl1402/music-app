@@ -5,7 +5,8 @@ import { clerkClient, clerkMiddleware, getAuth } from '@clerk/express';
 import { connectDB } from "./lib/db.js";
 import fileUpload from "express-fileupload";
 import cors from "cors";
-
+import { createServer } from "http";
+import { initializeSocket } from "./lib/socket.js";
 import userRoutes from "./routes/user.route.js";
 import adminRoutes from "./routes/admin.route.js";
 import authRoutes from "./routes/auth.route.js";
@@ -19,6 +20,9 @@ dotenv.config();
 const app = express();
 const __dirname = path.resolve();
 const port = process.env.PORT;
+const server = createServer(app);
+
+initializeSocket(server);
 
 app.use(cors(
     {
@@ -69,7 +73,7 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: process.env.NODE_ENV === "production" ? "Internal server error" : err.message });
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log("Server is running on port 5000")
 
     connectDB();
